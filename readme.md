@@ -62,7 +62,7 @@ This Azure Function acts as a proxy, forwarding HTTP requests to an external Log
 ### Deployment
 You can deploy this Azure Function directly to your Azure account by clicking the button below:
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/itweedie/AzureFunction-Proxy/main/azuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json%3Ftoken%3DGHSAT0AAAAAACW4S4HFBMJ7ZCKP3IPN7ZRGZXGSFFA)
 
 #### Deployment Parameters
 
