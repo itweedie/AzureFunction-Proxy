@@ -1,5 +1,10 @@
 const { app } = require('@azure/functions');
 const axios = require('axios');
+const querystring = require('querystring');
+require('dotenv').config();
+
+// Load environment variables (assuming process.env is used in your setup)
+const LOGIC_APP_URL = process.env.LOGIC_APP_URL;
 
 app.http('Trigger2', {
     methods: ['GET', 'POST'],
@@ -8,42 +13,45 @@ app.http('Trigger2', {
         context.log(`Http function processed request for url "${request.url}"`);
 
         try {
-            // Extract headers from the incoming request and log them
             const incomingHeaders = request.headers;
-            context.log('Received Headers:', incomingHeaders);
+            //context.log('Received Headers:', incomingHeaders);
 
-            // Capture body from the incoming request if needed
-            //const requestBody = request.body || {};
+            const queryParams = request.query;
+            context.log('Received Query Parameters:', queryParams);
 
-            // Add necessary headers (if any, such as Content-Type or Authorization) manually
+            const queryString = querystring.stringify(queryParams);
+
+            // Base URL from environment variable
+            console.log("Flow URL: ", LOGIC_APP_URL)
+            const baseUrl = LOGIC_APP_URL;
+
+            const fullUrl = queryString ? `${baseUrl}&${queryString}` : baseUrl;
+
             const headersToSend = {
-                'Content-Type': 'application/json', // Example of a required header
-                // Add any other necessary headers here
+                'Content-Type': 'application/json',
+                'X-MS-CLIENT-PRINCIPAL-ID': incomingHeaders['x-ms-client-principal-id'] || '',
             };
 
-            // Make the HTTP call to the endpoint and expect binary data
             const response = await axios({
-                method: 'get', // Adjust the method as per your needs
-                url: 'https://prod-21.uksouth.logic.azure.com/workflows/5ba0def50b7e43498b887e8aac99bfae/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=wt-FxeMbuDM_UwFENGNdX-BGwFYX-u7hWtIqjw4Z5xQ',
-                headers: headersToSend, // Pass only necessary headers
-                responseType: 'arraybuffer', // Important: Expect binary data
-                timeout: 60000 // Optional: set a timeout for long responses
+                method: 'get',
+                url: fullUrl,
+                headers: headersToSend,
+                responseType: 'arraybuffer',
+                timeout: 60000
             });
 
-            // Return the binary data and set proper headers
             return {
                 status: response.status,
                 headers: {
-                    ...response.headers, // Pass original headers back
-                    'Content-Type': response.headers['content-type'], // Ensure correct Content-Type is returned
-                    'Content-Disposition': response.headers['content-disposition'], // Pass through file name, if any
+                    ...response.headers,
+                    'Content-Type': response.headers['content-type'],
+                    'Content-Disposition': response.headers['content-disposition'],
                 },
-                body: response.data // Binary data
+                body: response.data
             };
 
         } catch (error) {
             context.log(`Error occurred: ${error.message}`);
-            // Handle errors and return appropriate status
             return {
                 status: error.response ? error.response.status : 500,
                 body: error.message || "Error processing request"
