@@ -1,0 +1,100 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2021-02-01",
+        "name": "[parameters('functionAppName')]",
+        "location": "[resourceGroup().location]",
+        "kind": "functionapp",
+        "properties": {
+          "siteConfig": {
+            "appSettings": [
+              {
+                "name": "FUNCTIONS_WORKER_RUNTIME",
+                "value": "node"
+              },
+              {
+                "name": "LOGIC_APP_URL",
+                "value": "[parameters('logicAppUrl')]"
+              },
+              {
+                "name": "FLOW_KEY",
+                "value": "[parameters('flowKey')]"
+              }
+            ]
+          },
+          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+        ]
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2021-02-01",
+        "name": "[parameters('hostingPlanName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Y1",
+          "tier": "Dynamic",
+          "size": "Y1",
+          "family": "Y",
+          "capacity": 0
+        },
+        "properties": {
+          "name": "[parameters('hostingPlanName')]"
+        }
+      },
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "apiVersion": "2021-02-01",
+        "name": "[parameters('storageAccountName')]",
+        "location": "[resourceGroup().location]",
+        "sku": {
+          "name": "Standard_LRS"
+        },
+        "kind": "StorageV2",
+        "properties": {}
+      }
+    ],
+    "parameters": {
+      "functionAppName": {
+        "type": "string",
+        "defaultValue": "my-function-app",
+        "metadata": {
+          "description": "Name of the Azure Function App."
+        }
+      },
+      "hostingPlanName": {
+        "type": "string",
+        "defaultValue": "my-hosting-plan",
+        "metadata": {
+          "description": "Name of the hosting plan."
+        }
+      },
+      "storageAccountName": {
+        "type": "string",
+        "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+        "metadata": {
+          "description": "Name of the storage account."
+        }
+      },
+      "logicAppUrl": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "The URL of the Logic App to call."
+        }
+      },
+      "flowKey": {
+        "type": "string",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Flow-Key to be used in the requests."
+        }
+      }
+    }
+  }
+  
