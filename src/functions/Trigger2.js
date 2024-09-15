@@ -1,10 +1,11 @@
 const { app } = require('@azure/functions');
 const axios = require('axios');
 const querystring = require('querystring');
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables
 
-// Load environment variables (assuming process.env is used in your setup)
+// Load environment variables
 const LOGIC_APP_URL = process.env.LOGIC_APP_URL;
+const FLOW_KEY = process.env.FLOW_KEY; // New environment variable for Flow-Key
 
 app.http('Trigger2', {
     methods: ['GET', 'POST'],
@@ -14,7 +15,7 @@ app.http('Trigger2', {
 
         try {
             const incomingHeaders = request.headers;
-            //context.log('Received Headers:', incomingHeaders);
+            context.log('Received Headers:', incomingHeaders);
 
             const queryParams = request.query;
             context.log('Received Query Parameters:', queryParams);
@@ -22,14 +23,16 @@ app.http('Trigger2', {
             const queryString = querystring.stringify(queryParams);
 
             // Base URL from environment variable
-            console.log("Flow URL: ", LOGIC_APP_URL)
             const baseUrl = LOGIC_APP_URL;
 
             const fullUrl = queryString ? `${baseUrl}&${queryString}` : baseUrl;
 
+            // Prepare headers for forwarding to the external endpoint
             const headersToSend = {
-                'Content-Type': 'application/json',
-                'X-MS-CLIENT-PRINCIPAL-ID': incomingHeaders['x-ms-client-principal-id'] || '',
+                ...incomingHeaders, // Include all incoming headers
+                //'Content-Type': 'application/json',
+                //'X-MS-CLIENT-PRINCIPAL-ID': incomingHeaders['x-ms-client-principal-id'] || '',
+                'Flow-Key': FLOW_KEY || '', // Add the Flow-Key from the environment variable
             };
 
             const response = await axios({
