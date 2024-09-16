@@ -1,6 +1,6 @@
 # Azure Function Proxy
 
-This Azure Function acts as a proxy, forwarding HTTP requests to an external Logic App endpoint while adding custom headers and passing through all incoming headers. The function is designed to handle `GET` requests.
+This Azure Function acts as a proxy, forwarding HTTP requests to an external Power automate Flow HTTP Trigger endpoint while adding custom headers and passing through all incoming headers. The function is designed to handle `GET` requests.
 
 ## Features
 
@@ -39,7 +39,7 @@ This Azure Function acts as a proxy, forwarding HTTP requests to an external Log
     Create a `.env` file in the root of your project directory with the following contents:
 
     ```env
-    LOGIC_APP_URL=https://prod-21.uksouth.logic.azure.com/workflows/your-logic-app-url
+    FLOW_URL=https://prod-21.uksouth.logic.azure.com/workflows/your-logic-app-url
     FLOW_KEY=your-flow-key-value
     ```
 

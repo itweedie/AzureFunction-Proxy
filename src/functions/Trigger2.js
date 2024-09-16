@@ -4,7 +4,7 @@ const querystring = require('querystring');
 require('dotenv').config(); // Load environment variables
 
 // Load environment variables
-const LOGIC_APP_URL = process.env.LOGIC_APP_URL;
+const FLOW_URL = process.env.FLOW_URL;
 const FLOW_KEY = process.env.FLOW_KEY; // New environment variable for Flow-Key
 
 app.http('Trigger2', {
@@ -23,7 +23,7 @@ app.http('Trigger2', {
             const queryString = querystring.stringify(queryParams);
 
             // Base URL from environment variable
-            const baseUrl = LOGIC_APP_URL;
+            const baseUrl = FLOW_URL;
 
             const fullUrl = queryString ? `${baseUrl}&${queryString}` : baseUrl;
 

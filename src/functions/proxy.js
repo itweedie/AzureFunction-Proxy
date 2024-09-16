@@ -5,12 +5,12 @@ const querystring = require('querystring'); // Utility to handle query strings
 require('dotenv').config(); // Load environment variables from .env file
 
 // Load environment variables for Logic App URL and Flow-Key
-const LOGIC_APP_URL = process.env.LOGIC_APP_URL; // The external Logic App URL
+const FLOW_URL = process.env.FLOW_URL; // The external Logic App URL
 const FLOW_KEY = process.env.FLOW_KEY; // Flow-Key for authentication or identification
 
 // Define the HTTP trigger function
 app.http('proxy', {
-    methods: ['GET', 'POST'], // Supported HTTP methods (GET and POST)
+    methods: ['GET'], // Supported HTTP methods (GET and POST)
     authLevel: 'anonymous', // Authentication level for the Azure Function
     handler: async (request, context) => {
         context.log(`Http function processed request for url "${request.url}"`);
@@ -29,7 +29,7 @@ app.http('proxy', {
 
             // Construct the full URL for the external Logic App call
             // Append query string if it exists
-            const fullUrl = queryString ? `${LOGIC_APP_URL}&${queryString}` : LOGIC_APP_URL;
+            const fullUrl = queryString ? `${FLOW_URL}&${queryString}` : FLOW_URL;
 
             // Construct headers to send to the external Logic App
             const headersToSend = {

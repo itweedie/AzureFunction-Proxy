@@ -16,8 +16,8 @@
                 "value": "node"
               },
               {
-                "name": "LOGIC_APP_URL",
-                "value": "[parameters('logicAppUrl')]"
+                "name": "FLOW_URL",
+                "value": "[parameters('flowUrl')]"
               },
               {
                 "name": "FLOW_KEY",
@@ -81,11 +81,11 @@
           "description": "Name of the storage account."
         }
       },
-      "logicAppUrl": {
+      "FlowUrl": {
         "type": "string",
         "defaultValue": "",
         "metadata": {
-          "description": "The URL of the Logic App to call."
+          "description": "The URL of the HTTP Trigger."
         }
       },
       "flowKey": {
