@@ -62,7 +62,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2021-02-01",
-            "name": "[parameters('storageAccountName')]",
+            "name": "[concat(parameters('storageAccountNamePrefix'), uniqueString(resourceGroup().id))]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "Standard_LRS"
@@ -86,11 +86,11 @@
                 "description": "Name of the hosting plan."
             }
         },
-        "storageAccountName": {
+        "storageAccountNamePrefix": {
             "type": "string",
-            "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+            "defaultValue": "storage",
             "metadata": {
-                "description": "Name of the storage account."
+                "description": "Prefix for the storage account name."
             }
         },
         "flowUrl": {
