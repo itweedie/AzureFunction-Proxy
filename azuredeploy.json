@@ -2,99 +2,124 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "resources": [
-      {
-        "type": "Microsoft.Web/sites",
-        "apiVersion": "2021-02-01",
-        "name": "[parameters('functionAppName')]",
-        "location": "[resourceGroup().location]",
-        "kind": "functionapp",
-        "properties": {
-          "siteConfig": {
-            "appSettings": [
-              {
-                "name": "FUNCTIONS_WORKER_RUNTIME",
-                "value": "node"
-              },
-              {
-                "name": "FLOW_URL",
-                "value": "[parameters('flowUrl')]"
-              },
-              {
-                "name": "FLOW_KEY",
-                "value": "[parameters('flowKey')]"
-              }
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('functionAppName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "functionapp",
+            "properties": {
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "FLOW_URL",
+                            "value": "[parameters('flowUrl')]"
+                        },
+                        {
+                            "name": "FLOW_KEY",
+                            "value": "[parameters('flowKey')]"
+                        },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "1"
+                        }
+                    ],
+                    "scmType": "GitHub",
+                    "appCommandLine": "",
+                    "http20Enabled": true,
+                    "minTlsVersion": "1.2"
+                },
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+                "repositorySiteName": "[parameters('functionAppName')]",
+                "repositoryUrl": "[parameters('githubRepoUrl')]",
+                "branch": "[parameters('branch')]",
+                "isManualIntegration": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             ]
-          },
-          "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
         },
-        "dependsOn": [
-          "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
-        ]
-      },
-      {
-        "type": "Microsoft.Web/serverfarms",
-        "apiVersion": "2021-02-01",
-        "name": "[parameters('hostingPlanName')]",
-        "location": "[resourceGroup().location]",
-        "sku": {
-          "name": "Y1",
-          "tier": "Dynamic",
-          "size": "Y1",
-          "family": "Y",
-          "capacity": 0
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('hostingPlanName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
+            },
+            "properties": {
+                "name": "[parameters('hostingPlanName')]"
+            }
         },
-        "properties": {
-          "name": "[parameters('hostingPlanName')]"
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-02-01",
+            "name": "[parameters('storageAccountName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS"
+            },
+            "kind": "StorageV2",
+            "properties": {}
         }
-      },
-      {
-        "type": "Microsoft.Storage/storageAccounts",
-        "apiVersion": "2021-02-01",
-        "name": "[parameters('storageAccountName')]",
-        "location": "[resourceGroup().location]",
-        "sku": {
-          "name": "Standard_LRS"
-        },
-        "kind": "StorageV2",
-        "properties": {}
-      }
     ],
     "parameters": {
-      "functionAppName": {
-        "type": "string",
-        "defaultValue": "my-function-app",
-        "metadata": {
-          "description": "Name of the Azure Function App."
+        "functionAppName": {
+            "type": "string",
+            "defaultValue": "my-function-app",
+            "metadata": {
+                "description": "Name of the Azure Function App."
+            }
+        },
+        "hostingPlanName": {
+            "type": "string",
+            "defaultValue": "my-hosting-plan",
+            "metadata": {
+                "description": "Name of the hosting plan."
+            }
+        },
+        "storageAccountName": {
+            "type": "string",
+            "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
+            "metadata": {
+                "description": "Name of the storage account."
+            }
+        },
+        "flowUrl": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "The URL of the HTTP Trigger."
+            }
+        },
+        "flowKey": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Flow-Key to be used in the requests."
+            }
+        },
+        "githubRepoUrl": {
+            "type": "string",
+            "defaultValue": "https://github.com/itweedie/AzureFunction-Proxy.git",
+            "metadata": {
+                "description": "GitHub Repository URL for the Azure Function App."
+            }
+        },
+        "branch": {
+            "type": "string",
+            "defaultValue": "main",
+            "metadata": {
+                "description": "Branch of the repository to deploy from."
+            }
         }
-      },
-      "hostingPlanName": {
-        "type": "string",
-        "defaultValue": "my-hosting-plan",
-        "metadata": {
-          "description": "Name of the hosting plan."
-        }
-      },
-      "storageAccountName": {
-        "type": "string",
-        "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]",
-        "metadata": {
-          "description": "Name of the storage account."
-        }
-      },
-      "FlowUrl": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "The URL of the HTTP Trigger."
-        }
-      },
-      "flowKey": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Flow-Key to be used in the requests."
-        }
-      }
     }
-  }
-  
+}
