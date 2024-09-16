@@ -28,16 +28,11 @@
                             "value": "1"
                         }
                     ],
-                    "scmType": "GitHub",
                     "appCommandLine": "",
                     "http20Enabled": true,
                     "minTlsVersion": "1.2"
                 },
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
-                "repositorySiteName": "[parameters('functionAppName')]",
-                "repositoryUrl": "[parameters('githubRepoUrl')]",
-                "branch": "[parameters('branch')]",
-                "isManualIntegration": true
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
@@ -105,20 +100,6 @@
             "defaultValue": "",
             "metadata": {
                 "description": "Flow-Key to be used in the requests."
-            }
-        },
-        "githubRepoUrl": {
-            "type": "string",
-            "defaultValue": "https://github.com/itweedie/AzureFunction-Proxy.git",
-            "metadata": {
-                "description": "GitHub Repository URL for the Azure Function App."
-            }
-        },
-        "branch": {
-            "type": "string",
-            "defaultValue": "main",
-            "metadata": {
-                "description": "Branch of the repository to deploy from."
             }
         }
     }
