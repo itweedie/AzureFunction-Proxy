@@ -12,7 +12,7 @@ This repository contains an Azure Function that acts as an HTTP Proxy to authent
 
 ## Deployment
 This is a ready to go deployment, you can deploy this Azure Function directly to your Azure account by clicking the button below:
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json%3Ftoken%3DGHSAT0AAAAAACW4S4HFBMJ7ZCKP3IPN7ZRGZXGSFFA)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json)
 
 ### Deployment Parameters
 
