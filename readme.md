@@ -22,7 +22,7 @@ The first step is to fork the repository that contains the code for the Azure Fu
 ### 2. Deploy to Azure via Button
 Once you have forked the repository, you can deploy the function app directly to Azure using the **Deploy to Azure** button.
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-PowerAutomateProxy%2Fmain%2Fazuredeploy.json)
 
 After clicking the button, you will be prompted to provide the following parameters:
 
