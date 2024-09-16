@@ -18,7 +18,7 @@ app.http('proxy', {
         try {
             // Extract and log incoming request headers for debugging purposes
             const incomingHeaders = request.headers;
-            context.log('Received Headers:', incomingHeaders);
+            //context.log('Received Headers:', incomingHeaders);
 
             // Extract and log query parameters from the request URL
             const queryParams = request.query;
