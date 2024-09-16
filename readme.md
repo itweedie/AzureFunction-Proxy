@@ -1,6 +1,5 @@
-# Azure Function Proxy
-
-This Azure Function acts as a proxy, forwarding HTTP requests to an external Power automate Flow HTTP Trigger endpoint while adding custom headers and passing through all incoming headers. The function is designed to handle `GET` requests.
+# AzureFunction-PowerAutomateProxy
+This repository contains an Azure Function that acts as an HTTP Proxy to authenticate and forward requests to a Power Automate Flow. The function is designed to validate incoming requests and then route them to a Power Automate Flow, ensuring that only authenticated requests are processed.
 
 ## Features
 
@@ -10,6 +9,19 @@ This Azure Function acts as a proxy, forwarding HTTP requests to an external Pow
 - Appends query parameters from the incoming request to the external URL.
 - Configurable via environment variables to avoid hardcoding sensitive data like URLs and keys.
 - Proper error handling and logging for easy debugging.
+
+## Deployment
+This is a ready to go deployment, you can deploy this Azure Function directly to your Azure account by clicking the button below:
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json%3Ftoken%3DGHSAT0AAAAAACW4S4HFBMJ7ZCKP3IPN7ZRGZXGSFFA)
+
+### Deployment Parameters
+
+After clicking the button, you will be prompted to provide the following parameters:
+
+- **functionAppName**: Name of your Azure Function App.
+- **hostingPlanName**: Name of the hosting plan (leave as default unless you want to customize).
+- **logicAppUrl**: The URL of your Logic App (replace with your own Logic App URL).
+- **flowKey**: Your Flow-Key value for the external Logic App.
 
 ## Setup Instructions
 
@@ -59,21 +71,7 @@ This Azure Function acts as a proxy, forwarding HTTP requests to an external Pow
     curl -X GET http://localhost:7071/api/proxy -H "X-MS-CLIENT-PRINCIPAL-ID: custom-id"
     ```
 
-### Deployment
-You can deploy this Azure Function directly to your Azure account by clicking the button below:
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json%3Ftoken%3DGHSAT0AAAAAACW4S4HFBMJ7ZCKP3IPN7ZRGZXGSFFA)
-
-#### Deployment Parameters
-
-After clicking the button, you will be prompted to provide the following parameters:
-
-- **functionAppName**: Name of your Azure Function App.
-- **hostingPlanName**: Name of the hosting plan (leave as default unless you want to customize).
-- **logicAppUrl**: The URL of your Logic App (replace with your own Logic App URL).
-- **flowKey**: Your Flow-Key value for the external Logic App.
-
-### Configuration
+    ### Configuration
 
 - The external Power Automate Flow URL is set using the `FLOW_URL` environment variable.
 - The `Flow-Key` header is added using the `FLOW_KEY` environment variable.
