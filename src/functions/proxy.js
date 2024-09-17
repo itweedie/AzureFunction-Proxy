@@ -1,6 +1,6 @@
 const { app } = require('@azure/functions');
 
-app.http('Trigger2', {
+app.http('proxy', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
@@ -10,7 +10,10 @@ app.http('Trigger2', {
         try {
             // Extract and log incoming request headers for debugging purposes
             const incomingHeaders = request.headers;
-            //context.log('Received Headers:', incomingHeaders);
+            context.log('Received Headers:', incomingHeaders);
+            context.log('-------------------------');
+            const headersObject = Object.fromEntries(incomingHeaders.entries());
+            context.log('Received Headers:', headersObject);
 
             // Extract and log query parameters from the request URL
             const queryParams = request.query;
@@ -25,8 +28,9 @@ app.http('Trigger2', {
 
             // Construct headers to send to the external Logic App
             const headersToSend = {
-                ...incomingHeaders, // Include all original incoming headers
                 'Flow-Key': FLOW_KEY || '', // Include the Flow-Key from environment variables
+                'incoming': JSON.stringify(headersObject) || '',
+                ...incomingHeaders // Include all original incoming headers
             };
 
             // Make the HTTP request to the external Logic App
