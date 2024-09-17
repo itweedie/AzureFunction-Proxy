@@ -3,11 +3,19 @@ const { app } = require('@azure/functions');
 app.http('Trigger', {
     methods: ['GET', 'POST'],
     authLevel: 'anonymous',
-    handler: async (request, context) => {
-        context.log(`Http function processed request for url "${request.url}"`);
+    handler: async (req, context) => {
+        context.log(`Http function processed request for url "${req.url}"`);
 
-        const name = request.query.get('name') || await request.text() || 'world';
+        // Extract and log all headers
+        let headersOutput = '';
+        for (const [key, value] of Object.entries(req.headers)) {
+            context.log(`Header: ${key} = ${value}`);
+            headersOutput += `${key}: ${value}\n`;
+        }
 
-        return { body: `Hello, ${name}!` };
+        // Returning the headers in the response body
+        return { 
+            body: `Received headers:\n\n${headersOutput}` 
+        };
     }
 });

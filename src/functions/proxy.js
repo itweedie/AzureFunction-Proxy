@@ -16,25 +16,36 @@ app.http('proxy', {
         context.log(`Http function processed request for url "${request.url}"`);
 
         try {
-            // Extract and log incoming request headers for debugging purposes
-            const incomingHeaders = request.headers;
-            //context.log('Received Headers:', incomingHeaders);
+
 
             // Extract and log query parameters from the request URL
             const queryParams = request.query;
             context.log('Received Query Parameters:', queryParams);
 
+            // Convert URLSearchParams to a plain object
+            const paramsObject = Object.fromEntries(queryParams.entries());
+
             // Convert query parameters into a query string format
-            const queryString = querystring.stringify(queryParams);
+            const queryString = querystring.stringify(paramsObject);
+            context.log('Query String:', queryString);
 
             // Construct the full URL for the external Logic App call
             // Append query string if it exists
             const fullUrl = queryString ? `${FLOW_URL}&${queryString}` : FLOW_URL;
+            console.log('fullurl:',fullUrl);
+
+            // Extract and log incoming request headers for debugging purposes
+            const incomingHeaders = request.headers;
+            context.log('Received Headers:', incomingHeaders);
+            context.log('-------------------------');
+            const headersObject = Object.fromEntries(incomingHeaders.entries());
+            context.log('Received Headers:', headersObject);
 
             // Construct headers to send to the external Logic App
             const headersToSend = {
-                ...incomingHeaders, // Include all original incoming headers
                 'Flow-Key': FLOW_KEY || '', // Include the Flow-Key from environment variables
+                'incoming': JSON.stringify(headersObject) || '',
+                ...incomingHeaders // Include all original incoming headers
             };
 
             // Make the HTTP request to the external Logic App
