@@ -1,7 +1,16 @@
-const { app } = require('@azure/functions');
+// Import necessary modules
+const { app } = require('@azure/functions'); // Azure Functions SDK
+const axios = require('axios'); // HTTP client for making requests
+const querystring = require('querystring'); // Utility to handle query strings
+require('dotenv').config(); // Load environment variables from .env file
+
+// Load environment variables for Logic App URL and Flow-Key
+const FLOW_URL = process.env.FLOW_URL; // The external Logic App URL
+const FLOW_KEY = process.env.FLOW_KEY; // Flow-Key for authentication or identification
+
 
 app.http('proxy', {
-    methods: ['GET', 'POST'],
+    methods: ['GET'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
         // Log headers for debugging
@@ -11,16 +20,18 @@ app.http('proxy', {
             // Extract and log incoming request headers for debugging purposes
             const incomingHeaders = request.headers;
             context.log('Received Headers:', incomingHeaders);
-            context.log('-------------------------');
             const headersObject = Object.fromEntries(incomingHeaders.entries());
-            context.log('Received Headers:', headersObject);
+            context.log('Headers Object:', headersObject);
 
             // Extract and log query parameters from the request URL
             const queryParams = request.query;
             context.log('Received Query Parameters:', queryParams);
 
-            // Convert query parameters into a query string format
-            const queryString = querystring.stringify(queryParams);
+
+            // Convert URLSearchParams to a plain object
+            const paramsObject = Object.fromEntries(queryParams.entries());
+            const queryString = querystring.stringify(paramsObject);
+            context.log('Query String:', queryString);
 
             // Construct the full URL for the external Logic App call
             // Append query string if it exists
