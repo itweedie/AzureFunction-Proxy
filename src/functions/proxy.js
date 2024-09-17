@@ -1,51 +1,32 @@
-// Import necessary modules
-const { app } = require('@azure/functions'); // Azure Functions SDK
-const axios = require('axios'); // HTTP client for making requests
-const querystring = require('querystring'); // Utility to handle query strings
-require('dotenv').config(); // Load environment variables from .env file
+const { app } = require('@azure/functions');
 
-// Load environment variables for Logic App URL and Flow-Key
-const FLOW_URL = process.env.FLOW_URL; // The external Logic App URL
-const FLOW_KEY = process.env.FLOW_KEY; // Flow-Key for authentication or identification
-
-// Define the HTTP trigger function
-app.http('proxy', {
-    methods: ['GET'], // Supported HTTP methods (GET and POST)
-    authLevel: 'anonymous', // Authentication level for the Azure Function
+app.http('Trigger2', {
+    methods: ['GET', 'POST'],
+    authLevel: 'anonymous',
     handler: async (request, context) => {
-        context.log(`Http function processed request for url "${request.url}"`);
+        // Log headers for debugging
+        context.log('Request Headers:', request.headers);
 
         try {
-
+            // Extract and log incoming request headers for debugging purposes
+            const incomingHeaders = request.headers;
+            //context.log('Received Headers:', incomingHeaders);
 
             // Extract and log query parameters from the request URL
             const queryParams = request.query;
             context.log('Received Query Parameters:', queryParams);
 
-            // Convert URLSearchParams to a plain object
-            const paramsObject = Object.fromEntries(queryParams.entries());
-
             // Convert query parameters into a query string format
-            const queryString = querystring.stringify(paramsObject);
-            context.log('Query String:', queryString);
+            const queryString = querystring.stringify(queryParams);
 
             // Construct the full URL for the external Logic App call
             // Append query string if it exists
             const fullUrl = queryString ? `${FLOW_URL}&${queryString}` : FLOW_URL;
-            console.log('fullurl:',fullUrl);
-
-            // Extract and log incoming request headers for debugging purposes
-            const incomingHeaders = request.headers;
-            context.log('Received Headers:', incomingHeaders);
-            context.log('-------------------------');
-            const headersObject = Object.fromEntries(incomingHeaders.entries());
-            context.log('Received Headers:', headersObject);
 
             // Construct headers to send to the external Logic App
             const headersToSend = {
+                ...incomingHeaders, // Include all original incoming headers
                 'Flow-Key': FLOW_KEY || '', // Include the Flow-Key from environment variables
-                'incoming': JSON.stringify(headersObject) || '',
-                ...incomingHeaders // Include all original incoming headers
             };
 
             // Make the HTTP request to the external Logic App

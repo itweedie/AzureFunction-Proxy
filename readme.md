@@ -11,40 +11,8 @@ This repository contains an Azure Function that acts as an HTTP Proxy to authent
 - Proper error handling and logging for easy debugging.
 
 
-## Deployment Instructions
 
-### 1. Fork the GitHub Repository
-The first step is to fork the repository that contains the code for the Azure Function. This will allow you to create a copy of the repository under your own GitHub account.
-
-- Navigate to the GitHub repository you want to fork.
-- Click on the **Fork** button at the top-right corner of the repository page. This will create a copy of the repository in your GitHub account.
-
-### 2. Deploy to Azure via Button
-Once you have forked the repository, you can deploy the function app directly to Azure using the **Deploy to Azure** button.
-
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fitweedie%2FAzureFunction-Proxy%2Fmain%2Fazuredeploy.json)
-
-After clicking the button, you will be prompted to provide the following parameters:
-
-- **functionAppName**: Name of your Azure Function App.
-- **hostingPlanName**: Name of the hosting plan (leave as default unless you want to customize).
-- **logicAppUrl**: The URL of your Logic App (replace with your own Logic App URL).
-- **flowKey**: Your Flow-Key value for the external Logic App.
-
-### 3. Configure the Azure Deployment
-Once you're on the custom deployment page in the Azure portal, you’ll need to configure the following settings:
-
-- **Subscription**: Select your Azure subscription.
-- **Resource Group**: Either select an existing resource group or create a new one.
-- **Region**: Select the appropriate region for your deployment (closest to your users or where your infrastructure resides).
-- **App Name**: Give your Azure Function app a unique name.
-
-After configuring these settings, click the **Review + Create** button, followed by **Create** to start the deployment. Azure will automatically provision the resources based on your configuration.
-
-### 4. Connect the Azure Function to Your GitHub Repository
-Once the resources are created and the function app is deployed, the next step is to set up continuous deployment from your GitHub repository. Azure Functions has built-in support for this via the **Deployment Center**.
-
-#### Steps to Connect:
+## Steps to Connect:
 
 1. **Navigate to the Azure Function**:
    - In the Azure portal, navigate to the resource group where your Azure Function was created.
